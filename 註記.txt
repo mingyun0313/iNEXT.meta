@@ -1,0 +1,6 @@
+R/Mainfunction/
+
+#' @param level a numerical value specifying the particular value of sample coverage (between 0 and 1) or sample sizes that will be used to compute standardized 3D estimates. \cr
+#' If \code{level = NULL}, then this function computes the standardized 3D diversity estimates for the minimum sample coverage among all samples extrapolated to double reference sizes. \cr
+
+先拿掉
