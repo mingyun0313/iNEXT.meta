@@ -19,9 +19,9 @@ DataInfobeta3Dmeta(
 \item{data}{(a) For \code{datatype = "abundance"}, data can be input as a data.frame. The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and treatment. \cr
 (b) For \code{datatype = "incidence_raw"}, data can be input as a data.frame. The data frame has study/site, treatment, patch as the first three columns, followed by columns for species names.}
 
-\item{diversity}{selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.}
+\item{diversity}{Selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.}
 
-\item{datatype}{data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
+\item{datatype}{Data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence data (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
 \item{PDtree}{(required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled data.}
 
@@ -31,7 +31,7 @@ DataInfobeta3Dmeta(
 
 \item{FDtype}{(required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under a specified threshold value, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{FDtype = "AUC"}.}
 
-\item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).}
+\item{FDtau}{(required only when \code{diversity = "FD"} and \code{FDtype = "tau_value"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).}
 }
 \value{
 A data.frame including basic data information. \cr
@@ -103,7 +103,8 @@ info_FDtau_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = '
 info_FDtau_abu
 
 
-## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are considered
+## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are
+considered
 data("Spider_abundance_data")
 data("Spider_distM")
 info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
@@ -119,7 +120,8 @@ info_FDtau_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD'
 info_FDtau_inc
 
 
-## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are considered
+## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are
+considered
 data("Bat_incidence_data")
 data("Bat_distM")
 info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',

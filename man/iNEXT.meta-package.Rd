@@ -12,7 +12,7 @@
 
   This package provides three main functions: \cr
 
-  1. \code{DataInfobeta3Dmeta} provides basic data information in each combination of site and treatment for (1) the reference sample in each assemblage, (2) the gamma reference sample in the pooled assemblage, and (3) the alpha reference sample in the joint assemblage. \cr
+  1. \code{DataInfobeta3Dmeta} provides basic data information in each combination of site and treatment for (1) the gamma reference sample in the pooled assemblage, and (2) the alpha reference sample in the joint assemblage. \cr
 
   2. \code{iNEXTbeta3Dmeta} estimates the difference of standardized 3D diversity with common sample coverage (for alpha, beta, gamma diversity, and four classes of dissimilarity measures) between two treatments, and fit a fixed- or random-effects model to perform meta-analysis. \cr
 

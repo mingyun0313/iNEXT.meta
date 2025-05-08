@@ -4,13 +4,13 @@
 #'
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a data.frame. The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and treatment. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a data.frame. The data frame has study/site, treatment, patch as the first three columns, followed by columns for species names.
-#' @param diversity selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
+#' @param diversity Selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.
+#' @param datatype Data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence data (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
 #' @param PDtree (required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled data.
 #' @param PDreftime (required only when \code{diversity = "PD"}), a numerical value specifying reference times for PD. Default is NULL (i.e., the age of the root of PDtree).
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled data.
 #' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under a specified threshold value, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{FDtype = "AUC"}.
-#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
+#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_value"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
 #'
 #'
 #'
@@ -85,7 +85,8 @@
 #' info_FDtau_abu
 #'
 #'
-#' ## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are considered
+#' ## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are
+#' considered
 #' data("Spider_abundance_data")
 #' data("Spider_distM")
 #' info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
@@ -101,7 +102,8 @@
 #' info_FDtau_inc
 #'
 #'
-#' ## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are considered
+#' ## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are
+#' considered
 #' data("Bat_incidence_data")
 #' data("Bat_distM")
 #' info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',
@@ -147,20 +149,20 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #'
 #' @param data (a) For \code{datatype = "abundance"}, data can be input as a data.frame. The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and treatment. \cr
 #' (b) For \code{datatype = "incidence_raw"}, data can be input as a data.frame. The data frame has study/site, treatment, patch as the first three columns, followed by columns for species names.
-#' @param model selection of model type: 'FE' = Fixed effect model, 'RE' = Random effect model.
-#' @param diversity selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.
-#' @param order.q a numerical value specifying the diversity order, Default is \code{q = 0}.
-#' @param datatype data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence matrix (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
-#' @param level a numerical value between 0 and 1 specifying the sample coverage level used for computing standardized diversity and dissimilarity. By default(\code{level = "auto"}), the function automatically calculates standardized 3D gamma, alpha, and beta diversities, along with four dissimilarity indices, up to the minimum coverage achieved by doubling the reference sample size across all site and treatment combinations.
-#' @param nboot a positive integer specifying the number of bootstrap replications when assessing sampling uncertainty for estimating standardized 3D diversity and the associated confidence intervals. Default is 10. If more accurate results are required, set \code{nboot = 100} (or \code{nboot = 200}).
-#' @param treatment_order a character vector for the names of treatment. The difference of standardized 3D diversity will be computed as diversity of the first treatment minus the diversity of second treatment.
-#' @param conf a positive number < 1 specifying the level of confidence interval. Default is 0.95.
+#' @param model Selection of model type: 'FE' = Fixed-effects model, 'RE' = Random-effects model.
+#' @param diversity Selection of diversity type: 'TD' = Taxonomic diversity, 'PD' = Phylogenetic diversity, and 'FD' = Functional diversity.
+#' @param order.q A numerical value specifying the diversity order, Default is \code{q = 0, 1, 2}.
+#' @param datatype Data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence data (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).
+#' @param level A numerical value between 0 and 1 specifying the sample coverage level used for computing standardized diversity and dissimilarity. By default(\code{level = "auto"}), the function automatically calculates standardized 3D gamma, alpha, and beta diversities, along with four dissimilarity indices, up to the minimum coverage achieved by doubling the reference sample size across all site and treatment combinations.
+#' @param nboot A positive integer specifying the number of bootstrap replications when assessing sampling uncertainty for estimating standardized beta3D diversity and the associated confidence intervals. Default is 10. If more accurate results are required, set \code{nboot = 100} (or \code{nboot = 200}).
+#' @param treatment_order A character vector for the names of treatment. The difference of standardized 3D diversity will be computed as diversity of the first treatment minus the diversity of second treatment.
+#' @param conf A positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param PDtree (required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled data.
 #' @param PDreftime (required only when \code{diversity = "PD"}), a numerical value specifying reference times for PD. Default is NULL (i.e., the age of the root of PDtree).
 #' @param PDtype (required only when \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{PDtype = "meanPD"}, where meanPD = PD/tree depth.
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled data.
-#' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_values"} for FD under a specified threshold value, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{FDtype = "AUC"}.
-#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_values"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
+#' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_value"} for FD under a specified threshold value, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{FDtype = "AUC"}.
+#' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_value"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
 #' @param FDcut_number (required only when \code{diversity = "FD"} and \code{FDtype = "AUC"}) a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is 30. A larger value can be set to obtain more accurate AUC value.
 #'
 #'
@@ -179,9 +181,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #'
 #' # Coverage-based standardized TD
 #' data("Spider_abundance_data")
-#' output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "TD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95)
+#' output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 #'
 #' output1_abu
 #'
@@ -190,9 +192,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #' # Coverage-based standardized PD
 #' data("Spider_abundance_data")
 #' data("Spider_tree")
-#' output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "PD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "PD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
 #' output2_abu
 #'
@@ -201,9 +203,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #' # Coverage-based standardized FD
 #' data("Spider_abundance_data")
 #' data("Spider_distM")
-#' output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "FD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "FD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
 #' output3_abu
 #'
@@ -211,9 +213,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #'
 #' # Coverage-based standardized TD
 #' data("Bat_incidence_data")
-#' output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "TD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95)
+#' output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 #' output1_inc
 #'
 #' ## Phylogenetic diversity for incidence data
@@ -221,9 +223,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #' # Coverage-based standardized PD
 #' data("Bat_incidence_data")
 #' data("Bat_tree")
-#' output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "PD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "PD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
 #' output2_inc
 #'
@@ -232,9 +234,9 @@ DataInfobeta3Dmeta <- function(data, diversity, datatype,
 #' # Coverage-based standardized FD
 #' data("Bat_incidence_data")
 #' data("Bat_distM")
-#' output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "FD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
 #' output3_inc
 #'
@@ -445,16 +447,16 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 }
 
 
-#' Forest plot of the standardized 3D diversity difference between two treatments under fixed- or random-effects models
+#' Forest plot of the standardized 3D diversity difference between two treatments under fixed- or random-effects model
 #'
 #' \code{ggiNEXTmeta} is a function that provides forest plot for the difference of standardized 3D (taxonomic, phylogenetic and functional) beta diversity between two treatments.
 #'
-#' @param data the output of the iNEXTbeta3Dmeta function.
-#' @param order.q a previously appeared 'Order.q' value in 'data'.
-#' @param num_round a numerical value that the values show on the plot are rounded to the specified value of decimal places.
-#' @param range lower and upper limits for clipping confidence intervals to arrows.
-#' @param type specify diversity type (\code{'Gamma', 'Alpha', 'Beta'}), or dissimilarity type (\code{'1-C', '1-U', '1-V', '1-S'}).
-#' @param level an optional sample coverage value (between 0 and 100 percent) to be annotated on the forest plot, indicating the fixed sample coverage used; if \code{level = NULL}, the annotation will be omitted.
+#' @param data The output of the iNEXTbeta3Dmeta function.
+#' @param order.q A previously appeared 'Order.q' value in 'data'.
+#' @param num_round A numerical value that the values show on the plot are rounded to the specified value of decimal places.
+#' @param range Lower and upper limits for clipping confidence intervals to arrows.
+#' @param type Specify diversity type (\code{'Gamma', 'Alpha', 'Beta'}), or dissimilarity type (\code{'1-C', '1-U', '1-V', '1-S'}).
+#' @param level An optional sample coverage value (between 0 and 100 percent) to be annotated on the forest plot, indicating the fixed sample coverage used; if \code{level = NULL}, the annotation will be omitted.
 #'
 #' @import forestplot
 #' @import grid
@@ -468,9 +470,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'
 #' # Coverage-based standardized TD
 #' data("Spider_abundance_data")
-#' output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "TD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95)
+#' output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 #' ggiNEXTmeta(output1_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
@@ -479,9 +481,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' # Coverage-based standardized PD
 #' data("Spider_abundance_data")
 #' data("Spider_tree")
-#' output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "PD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "PD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
 #' ggiNEXTmeta(output2_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
@@ -491,9 +493,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' # Coverage-based standardized FD
 #' data("Spider_abundance_data")
 #' data("Spider_distM")
-#' output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, diversity = "FD", order.q = c(0, 1, 2),
-#'                                datatype = "abundance", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "FD",
+#'                                order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
 #' ggiNEXTmeta(output3_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
@@ -502,9 +504,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'
 #' # Coverage-based standardized TD
 #' data("Bat_incidence_data")
-#' output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "TD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95)
+#' output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 #' ggiNEXTmeta(output1_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
@@ -513,9 +515,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' # Coverage-based standardized PD
 #' data("Bat_incidence_data")
 #' data("Bat_tree")
-#' output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "PD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "PD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
 #' ggiNEXTmeta(output2_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
@@ -525,9 +527,9 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' # Coverage-based standardized FD
 #' data("Bat_incidence_data")
 #' data("Bat_distM")
-#' output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, diversity = "FD", order.q = c(0, 1, 2),
-#'                                datatype = "incidence_raw", nboot = 10,
-#'                                treatment_order = c("Enhanced", "Control"), conf = 0.95,
+#' output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD",
+#'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+#'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
 #' ggiNEXTmeta(output3_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 #'
