@@ -6,8 +6,8 @@
 \usage{
 DataInfobeta3Dmeta(
   data,
-  diversity,
-  datatype,
+  diversity = "TD",
+  datatype = "abundance",
   PDtree = NULL,
   PDreftime = NULL,
   FDdistM = NULL,
@@ -64,7 +64,7 @@ frequency counts (\code{Q1–Q5}) in the reference sample. For mean-PD and FD, o
 for abundance data.
 }
 \description{
-\code{DataInfobeta3Dmeta} provides basic data information in each combination of site and treatment for (1) the reference sample in each assemblage, (2) the gamma reference sample in the pooled assemblage, and (3) the alpha reference sample in the joint assemblage.
+\code{DataInfobeta3Dmeta} provides basic data information in each combination of site and treatment for (1) the gamma reference sample in the pooled assemblage, and (2) the alpha reference sample in the joint assemblage.
 }
 \examples{
 ## (Data Information) Taxonomic diversity for abundance data

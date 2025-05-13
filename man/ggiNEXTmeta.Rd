@@ -4,12 +4,12 @@
 \alias{ggiNEXTmeta}
 \title{Forest plot of the standardized 3D diversity difference between two treatments under fixed- or random-effects model}
 \usage{
-ggiNEXTmeta(data, order.q, num_round, range, type = NULL, level = NULL)
+ggiNEXTmeta(output, order.q, num_round = 3, range, type = NULL, level = NULL)
 }
 \arguments{
-\item{data}{The output of the iNEXTbeta3Dmeta function.}
+\item{output}{The output of the iNEXTbeta3Dmeta function.}
 
-\item{order.q}{A previously appeared 'Order.q' value in 'data'.}
+\item{order.q}{A previously appeared 'Order.q' value in 'output'.}
 
 \item{num_round}{A numerical value that the values show on the plot are rounded to the specified value of decimal places.}
 
@@ -31,7 +31,7 @@ A forest plot that visualizing the output of iNEXTbeta3Dmeta. In the plot, it sh
 # Coverage-based standardized TD
 data("Spider_abundance_data")
 output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 ggiNEXTmeta(output1_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 
@@ -42,7 +42,7 @@ ggiNEXTmeta(output1_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = 
 data("Spider_abundance_data")
 data("Spider_tree")
 output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "PD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
 ggiNEXTmeta(output2_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
@@ -54,7 +54,7 @@ ggiNEXTmeta(output2_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = 
 data("Spider_abundance_data")
 data("Spider_distM")
 output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "FD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
 ggiNEXTmeta(output3_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
@@ -65,7 +65,7 @@ ggiNEXTmeta(output3_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = 
 # Coverage-based standardized TD
 data("Bat_incidence_data")
 output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 ggiNEXTmeta(output1_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
 
@@ -76,7 +76,7 @@ ggiNEXTmeta(output1_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = 
 data("Bat_incidence_data")
 data("Bat_tree")
 output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "PD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
 ggiNEXTmeta(output2_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
@@ -88,7 +88,7 @@ ggiNEXTmeta(output2_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = 
 data("Bat_incidence_data")
 data("Bat_distM")
 output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
 ggiNEXTmeta(output3_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)

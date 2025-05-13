@@ -10,7 +10,7 @@ iNEXTbeta3Dmeta(
   diversity = "TD",
   order.q = 0,
   datatype = "abundance",
-  level = "auto",
+  level = NULL,
   nboot,
   treatment_order,
   conf = 0.95,
@@ -35,7 +35,7 @@ iNEXTbeta3Dmeta(
 
 \item{datatype}{Data type of input data: individual-based abundance data (\code{datatype = "abundance"}) or species by sampling-units incidence data (\code{datatype = "incidence_raw"}) with all entries being 0 (non-detection) or 1 (detection).}
 
-\item{level}{A numerical value between 0 and 1 specifying the sample coverage level used for computing standardized diversity and dissimilarity. By default(\code{level = "auto"}), the function automatically calculates standardized 3D gamma, alpha, and beta diversities, along with four dissimilarity indices, up to the minimum coverage achieved by doubling the reference sample size across all site and treatment combinations.}
+\item{level}{A numerical value between 0 and 1 specifying the sample coverage level used for computing standardized diversity and dissimilarity. By default(\code{level = NULL}), the function automatically calculates standardized 3D gamma, alpha, and beta diversities, along with four dissimilarity indices, up to the minimum coverage achieved by doubling the reference sample size across all site and treatment combinations.}
 
 \item{nboot}{A positive integer specifying the number of bootstrap replications when assessing sampling uncertainty for estimating standardized beta3D diversity and the associated confidence intervals. Default is 10. If more accurate results are required, set \code{nboot = 100} (or \code{nboot = 200}).}
 
@@ -46,8 +46,6 @@ iNEXTbeta3Dmeta(
 \item{PDtree}{(required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled data.}
 
 \item{PDreftime}{(required only when \code{diversity = "PD"}), a numerical value specifying reference times for PD. Default is NULL (i.e., the age of the root of PDtree).}
-
-\item{PDtype}{(required only when \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{PDtype = "meanPD"}, where meanPD = PD/tree depth.}
 
 \item{FDdistM}{(required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled data.}
 
@@ -72,7 +70,7 @@ and a Weight column representing the weight assigned to each site for the fixed 
 # Coverage-based standardized TD
 data("Spider_abundance_data")
 output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 
 output1_abu
@@ -83,7 +81,7 @@ output1_abu
 data("Spider_abundance_data")
 data("Spider_tree")
 output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "PD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
 output2_abu
@@ -94,7 +92,7 @@ output2_abu
 data("Spider_abundance_data")
 data("Spider_distM")
 output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "FD",
-                               order.q = c(0, 1, 2), datatype = "abundance", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
 output3_abu
@@ -104,7 +102,7 @@ output3_abu
 # Coverage-based standardized TD
 data("Bat_incidence_data")
 output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
 output1_inc
 
@@ -114,7 +112,7 @@ output1_inc
 data("Bat_incidence_data")
 data("Bat_tree")
 output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "PD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
 output2_inc
@@ -125,7 +123,7 @@ output2_inc
 data("Bat_incidence_data")
 data("Bat_distM")
 output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD",
-                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = "auto",
+                               order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
 output3_inc
