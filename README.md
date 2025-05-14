@@ -1,5 +1,7 @@
 <font color=#FF6600> </font>
 
+# An Introduction to iNEXT.meta via Examples
+
 `iNEXT.meta` (Meta-analysis of the difference between two treatments in
 interpolation and extrapolation for beta diversity across three
 dimensions)) is an R package that extends the concepts of (Chao et al.,
@@ -117,10 +119,8 @@ Description
 <code>diversity</code>
 </td>
 <td align="left">
-Selection of diversity type: “TD” = <font color=#FF6781>Taxonomic
-diversity</font>, “PD” = <font color=#FF6781>Phylogenetic
-diversity</font>, and “FD” = <font color=#FF6781>Functional
-diversity</font>.
+Selection of diversity type: “TD” = Taxonomic diversity, “PD” =
+Phylogenetic diversity, and “FD” = Functional diversity.
 </td>
 </tr>
 <tr class="odd">
@@ -195,25 +195,34 @@ sample coverage. For abundance data, it provides both <code>SC(n)</code>
 and <code>SC(2n)</code>; for incidence data, it provides
 <code>SC(T)</code> and <code>SC(2T)</code>. The output also includes
 other relevant information across the three dimensions of diversity. We
-demonstrate the function using the <code>Bat\_incidence\_data</code>)
+demonstrate the function using the <code>Bat\_incidence\_data</code>
 dataset for each dimension.
 
-    #> # A tibble: 24 × 13
-    #>    Site  Treatment Assemblage         T     U S.obs `SC(T)` `SC(2T)`
-    #>    <chr> <chr>     <chr>          <dbl> <dbl> <dbl>   <dbl>    <dbl>
-    #>  1 B04   Control   Pooled assemb…     4    22    12   0.811    0.957
-    #>  2 B04   Control   Joint assembl…     4    63    36   0.673    0.789
-    #>  3 B04   Enhanced  Pooled assemb…     4    36    14   0.979    1.00 
-    #>  4 B04   Enhanced  Joint assembl…     4   100    57   0.782    0.940
-    #>  5 B05   Control   Pooled assemb…     4    19     8   0.947    0.997
-    #>  6 B05   Control   Joint assembl…     4    77    37   0.849    0.958
-    #>  7 B05   Enhanced  Pooled assemb…     4    24    11   0.889    0.978
-    #>  8 B05   Enhanced  Joint assembl…     4    60    31   0.787    0.913
-    #>  9 B06   Control   Pooled assemb…     4    24    10   0.964    0.999
-    #> 10 B06   Control   Joint assembl…     4    51    33   0.698    0.894
-    #> # ℹ 14 more rows
-    #> # ℹ 5 more variables: Q1 <dbl>, Q2 <dbl>, Q3 <dbl>, Q4 <dbl>,
-    #> #   Q5 <dbl>
+    ## Data information for taxonomic diversity
+    data("Bat_incidence_data")
+    infooutput1 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "TD", datatype = "incidence_raw")
+
+    infooutput1
+
+    #> # A tibble: 15 × 13
+    #>    Site  Treatment Assemblage        T     U S.obs `SC(T)` `SC(2T)`    Q1
+    #>    <chr> <chr>     <chr>         <dbl> <dbl> <dbl>   <dbl>    <dbl> <dbl>
+    #>  1 B04   Control   Pooled assem…     4    22    12   0.811    0.957     6
+    #>  2 B04   Control   Joint assemb…     4    63    36   0.673    0.789    23
+    #>  3 B04   Enhanced  Pooled assem…     4    36    14   0.979    1.00      2
+    #>  4 B04   Enhanced  Joint assemb…     4   100    57   0.782    0.940    30
+    #>  5 B05   Control   Pooled assem…     4    19     8   0.947    0.997     2
+    #>  6 B05   Control   Joint assemb…     4    77    37   0.849    0.958    16
+    #>  7 B05   Enhanced  Pooled assem…     4    24    11   0.889    0.978     4
+    #>  8 B05   Enhanced  Joint assemb…     4    60    31   0.787    0.913    16
+    #>  9 B06   Control   Pooled assem…     4    24    10   0.964    0.999     2
+    #> 10 B06   Control   Joint assemb…     4    51    33   0.698    0.894    20
+    #> 11 B06   Enhanced  Pooled assem…     4    31    12   0.993    1.00      1
+    #> 12 B06   Enhanced  Joint assemb…     4    74    42   0.709    0.839    25
+    #> 13 B07   Control   Pooled assem…     4    22     7   0.973    0.996     1
+    #> 14 B07   Control   Joint assemb…     4    48    29   0.75     0.921    16
+    #> 15 B07   Enhanced  Pooled assem…     4    27    13   0.889    0.986     5
+    #> # ℹ 4 more variables: Q2 <dbl>, Q3 <dbl>, Q4 <dbl>, Q5 <dbl>
 
 Output description:
 
@@ -243,20 +252,34 @@ Output description:
 
 <!-- -->
 
-    #> # A tibble: 24 × 14
-    #>    Site  Treatment Assemblage            T     U S.obs `SC(T)` `SC(2T)` PD.obs `Q1*` `Q2*`     R1    R2 Reftime
-    #>    <chr> <chr>     <chr>             <int> <dbl> <dbl>   <dbl>    <dbl>  <dbl> <dbl> <dbl>  <dbl> <dbl>   <dbl>
-    #>  1 B04   Control   Pooled assemblage     4    22    12   0.811    0.957  139.      7     4  59.1   33.4    21.7
-    #>  2 B04   Control   Joint assemblage      4    63    36   0.673    0.789  525.     28     5 245.    69.3    21.7
-    #>  3 B04   Enhanced  Pooled assemblage     4    36    14   0.979    1.00   147.      2     7   8.25  46.8    21.7
-    #>  4 B04   Enhanced  Joint assemblage      4   100    57   0.782    0.940  815.     32    28 337.   205.     21.7
-    #>  5 B05   Control   Pooled assemblage     4    19     8   0.947    0.997   91.0     2     3  20.9   16.6    21.7
-    #>  6 B05   Control   Joint assemblage      4    77    37   0.849    0.958  533.     18    14 137.   131.     21.7
-    #>  7 B05   Enhanced  Pooled assemblage     4    24    11   0.889    0.978  119.      4     5  37.9   26.4    21.7
-    #>  8 B05   Enhanced  Joint assemblage      4    60    31   0.787    0.913  438.     16    12 136.   103.     21.7
-    #>  9 B06   Control   Pooled assemblage     4    24    10   0.964    0.999  123.      2     4  29.1   33.6    21.7
-    #> 10 B06   Control   Joint assemblage      4    51    33   0.698    0.894  525.     23    17 249.   174.     21.7
-    #> # ℹ 14 more rows
+    ## Data information for phylogenetic diversity
+    data("Bat_incidence_data")
+    data("Bat_tree")
+    infooutput2 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "PD", datatype = "incidence_raw",
+                                      PDtree = Bat_tree, PDreftime = NULL)
+
+    infooutput2
+
+    #> # A tibble: 15 × 14
+    #>    Site  Treatment Assemblage       T     U S.obs `SC(T)` `SC(2T)` PD.obs
+    #>    <chr> <chr>     <chr>        <int> <dbl> <dbl>   <dbl>    <dbl>  <dbl>
+    #>  1 B04   Control   Pooled asse…     4    22    12   0.811    0.957  139. 
+    #>  2 B04   Control   Joint assem…     4    63    36   0.673    0.789  525. 
+    #>  3 B04   Enhanced  Pooled asse…     4    36    14   0.979    1.00   147. 
+    #>  4 B04   Enhanced  Joint assem…     4   100    57   0.782    0.940  815. 
+    #>  5 B05   Control   Pooled asse…     4    19     8   0.947    0.997   91.0
+    #>  6 B05   Control   Joint assem…     4    77    37   0.849    0.958  533. 
+    #>  7 B05   Enhanced  Pooled asse…     4    24    11   0.889    0.978  119. 
+    #>  8 B05   Enhanced  Joint assem…     4    60    31   0.787    0.913  438. 
+    #>  9 B06   Control   Pooled asse…     4    24    10   0.964    0.999  123. 
+    #> 10 B06   Control   Joint assem…     4    51    33   0.698    0.894  525. 
+    #> 11 B06   Enhanced  Pooled asse…     4    31    12   0.993    1.00   144. 
+    #> 12 B06   Enhanced  Joint assem…     4    74    42   0.709    0.839  589. 
+    #> 13 B07   Control   Pooled asse…     4    22     7   0.973    0.996   88.8
+    #> 14 B07   Control   Joint assem…     4    48    29   0.75     0.921  450. 
+    #> 15 B07   Enhanced  Pooled asse…     4    27    13   0.889    0.986  156. 
+    #> # ℹ 5 more variables: `Q1*` <dbl>, `Q2*` <dbl>, R1 <dbl>, R2 <dbl>,
+    #> #   Reftime <dbl>
 
 Information description:
 
@@ -278,20 +301,33 @@ Information description:
 
 <!-- -->
 
-    #> # A tibble: 24 × 13
-    #>    Site  Treatment Assemblage            T     U S.obs `SC(T)` `SC(2T)` `a1*` `a2*`     h1     h2   Tau
-    #>    <chr> <chr>     <chr>             <dbl> <dbl> <int>   <dbl>    <dbl> <int> <int>  <dbl>  <dbl> <dbl>
-    #>  1 B04   Control   Pooled assemblage     4    22    12   0.811    0.957     1     3  0.707  1.75  0.283
-    #>  2 B04   Control   Joint assemblage      4    63    36   0.673    0.789    20     9 11.0    2.92  0.283
-    #>  3 B04   Enhanced  Pooled assemblage     4    36    14   0.979    1.00      0     1  0      0.482 0.309
-    #>  4 B04   Enhanced  Joint assemblage      4   100    57   0.782    0.940    27    19 15.3   13.0   0.309
-    #>  5 B05   Control   Pooled assemblage     4    19     8   0.947    0.997     1     2  1      2     0.203
-    #>  6 B05   Control   Joint assemblage      4    77    37   0.849    0.958    13    13  9.79   9.79  0.203
-    #>  7 B05   Enhanced  Pooled assemblage     4    24    11   0.889    0.978     1     4  1      3.02  0.239
-    #>  8 B05   Enhanced  Joint assemblage      4    60    31   0.787    0.913    12     9  7.22   7.10  0.239
-    #>  9 B06   Control   Pooled assemblage     4    24    10   0.964    0.999     1     2  1      1.94  0.260
-    #> 10 B06   Control   Joint assemblage      4    51    33   0.698    0.894    24     9 16.6    7.75  0.260
-    #> # ℹ 14 more rows
+    ## Data information for functional diversity (under a specified threshold level, FDtype = "tau_value")
+    data("Bat_incidence_data")
+    data("Bat_distM")
+    infooutput3 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", datatype = "incidence_raw",
+                                      FDdistM = Bat_distM, FDtype = "tau_value", FDtau = NULL)
+
+    infooutput3
+
+    #> # A tibble: 15 × 13
+    #>    Site  Treatment Assemblage        T     U S.obs `SC(T)` `SC(2T)` `a1*`
+    #>    <chr> <chr>     <chr>         <dbl> <dbl> <int>   <dbl>    <dbl> <int>
+    #>  1 B04   Control   Pooled assem…     4    22    12   0.811    0.957     1
+    #>  2 B04   Control   Joint assemb…     4    63    36   0.673    0.789    20
+    #>  3 B04   Enhanced  Pooled assem…     4    36    14   0.979    1.00      0
+    #>  4 B04   Enhanced  Joint assemb…     4   100    57   0.782    0.940    27
+    #>  5 B05   Control   Pooled assem…     4    19     8   0.947    0.997     1
+    #>  6 B05   Control   Joint assemb…     4    77    37   0.849    0.958    13
+    #>  7 B05   Enhanced  Pooled assem…     4    24    11   0.889    0.978     1
+    #>  8 B05   Enhanced  Joint assemb…     4    60    31   0.787    0.913    12
+    #>  9 B06   Control   Pooled assem…     4    24    10   0.964    0.999     1
+    #> 10 B06   Control   Joint assemb…     4    51    33   0.698    0.894    24
+    #> 11 B06   Enhanced  Pooled assem…     4    31    12   0.993    1.00      0
+    #> 12 B06   Enhanced  Joint assemb…     4    74    42   0.709    0.839    19
+    #> 13 B07   Control   Pooled assem…     4    22     7   0.973    0.996     0
+    #> 14 B07   Control   Joint assemb…     4    48    29   0.75     0.921    21
+    #> 15 B07   Enhanced  Pooled assem…     4    27    13   0.889    0.986     0
+    #> # ℹ 4 more variables: `a2*` <int>, h1 <dbl>, h2 <dbl>, Tau <dbl>
 
 Information description:
 
@@ -314,20 +350,33 @@ Information description:
 
 <!-- -->
 
-    #> # A tibble: 24 × 11
-    #>    Site  Treatment Assemblage            T     U S.obs `SC(T)` `SC(2T)`   dmin dmean  dmax
-    #>    <chr> <chr>     <chr>             <dbl> <dbl> <dbl>   <dbl>    <dbl>  <dbl> <dbl> <dbl>
-    #>  1 B04   Control   Pooled assemblage     4    22    12   0.811    0.957 0.0621 0.283 0.669
-    #>  2 B04   Control   Joint assemblage      4    63    36   0.673    0.789 0.0621 0.283 0.669
-    #>  3 B04   Enhanced  Pooled assemblage     4    36    14   0.979    1.00  0.0621 0.309 0.669
-    #>  4 B04   Enhanced  Joint assemblage      4   100    57   0.782    0.940 0.0621 0.309 0.669
-    #>  5 B05   Control   Pooled assemblage     4    19     8   0.947    0.997 0.0621 0.203 0.669
-    #>  6 B05   Control   Joint assemblage      4    77    37   0.849    0.958 0.0621 0.203 0.669
-    #>  7 B05   Enhanced  Pooled assemblage     4    24    11   0.889    0.978 0.0621 0.239 0.669
-    #>  8 B05   Enhanced  Joint assemblage      4    60    31   0.787    0.913 0.0621 0.239 0.669
-    #>  9 B06   Control   Pooled assemblage     4    24    10   0.964    0.999 0.0621 0.260 0.669
-    #> 10 B06   Control   Joint assemblage      4    51    33   0.698    0.894 0.0621 0.260 0.669
-    #> # ℹ 14 more rows
+    ## Data information for functional diversity (FDtype = "AUC")
+    data("Bat_incidence_data")
+    data("Bat_distM")
+    infooutput4 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", datatype = "incidence_raw",
+                                      FDdistM = Bat_distM, FDtype = "AUC")
+
+    infooutput4
+
+    #> # A tibble: 15 × 11
+    #>    Site  Treatment Assemblage       T     U S.obs `SC(T)` `SC(2T)`   dmin
+    #>    <chr> <chr>     <chr>        <dbl> <dbl> <dbl>   <dbl>    <dbl>  <dbl>
+    #>  1 B04   Control   Pooled asse…     4    22    12   0.811    0.957 0.0621
+    #>  2 B04   Control   Joint assem…     4    63    36   0.673    0.789 0.0621
+    #>  3 B04   Enhanced  Pooled asse…     4    36    14   0.979    1.00  0.0621
+    #>  4 B04   Enhanced  Joint assem…     4   100    57   0.782    0.940 0.0621
+    #>  5 B05   Control   Pooled asse…     4    19     8   0.947    0.997 0.0621
+    #>  6 B05   Control   Joint assem…     4    77    37   0.849    0.958 0.0621
+    #>  7 B05   Enhanced  Pooled asse…     4    24    11   0.889    0.978 0.0621
+    #>  8 B05   Enhanced  Joint assem…     4    60    31   0.787    0.913 0.0621
+    #>  9 B06   Control   Pooled asse…     4    24    10   0.964    0.999 0.0621
+    #> 10 B06   Control   Joint assem…     4    51    33   0.698    0.894 0.0621
+    #> 11 B06   Enhanced  Pooled asse…     4    31    12   0.993    1.00  0.0621
+    #> 12 B06   Enhanced  Joint assem…     4    74    42   0.709    0.839 0.0621
+    #> 13 B07   Control   Pooled asse…     4    22     7   0.973    0.996 0.0621
+    #> 14 B07   Control   Joint assem…     4    48    29   0.75     0.921 0.0621
+    #> 15 B07   Enhanced  Pooled asse…     4    27    13   0.889    0.986 0.0621
+    #> # ℹ 2 more variables: dmean <dbl>, dmax <dbl>
 
 Information description:
 
@@ -394,8 +443,8 @@ Description
 <code>model</code>
 </td>
 <td align="left">
-Selection of model type: “FE” = <font color=#FF6781>Fixed-effects
-model</font>, “RE” = <font color=#FF6781>Random-effects model</font>.
+Selection of model type: “FE” = Fixed-effects model, “RE” =
+Random-effects model.
 </td>
 </tr>
 <tr class="odd">
@@ -403,10 +452,8 @@ model</font>, “RE” = <font color=#FF6781>Random-effects model</font>.
 <code>diversity</code>
 </td>
 <td align="left">
-Selection of diversity type: “TD” = <font color=#FF6781>Taxonomic
-diversity</font>, “PD” = <font color=#FF6781>Phylogenetic
-diversity</font>, and “FD” = <font color=#FF6781>Functional
-diversity</font>.
+Selection of diversity type: “TD” = Taxonomic diversity, “PD” =
+Phylogenetic diversity, and “FD” = Functional diversity.
 </td>
 </tr>
 <tr class="even">
@@ -673,10 +720,14 @@ distance matrix.
     data("Bat_distM")
     Bat_distM
 
-    #>                          Barbastella_barbastellus Eptesicus_nilssonii Eptesicus_serotinus
-    #> Barbastella_barbastellus                    0.000               0.351               0.346
-    #> Eptesicus_nilssonii                         0.351               0.000               0.219
-    #> Eptesicus_serotinus                         0.346               0.219               0.000
+    #>                          Barbastella_barbastellus Eptesicus_nilssonii
+    #> Barbastella_barbastellus                    0.000               0.351
+    #> Eptesicus_nilssonii                         0.351               0.000
+    #> Eptesicus_serotinus                         0.346               0.219
+    #>                          Eptesicus_serotinus
+    #> Barbastella_barbastellus               0.346
+    #> Eptesicus_nilssonii                    0.219
+    #> Eptesicus_serotinus                    0.000
 
 ## Output of the main function iNEXTbetameta()
 
@@ -727,28 +778,28 @@ to compute the difference of taxonomic diversity between two treatments
 across all sites and perform meta analysis by running the following
 code:
 
-    #>       Site Difference   SE   LCL  UCL Order.q Diversity Enhanced
-    #> 1      B04       1.16 0.89 -0.59 2.91       0        TD     6.35
-    #> 2      B05       1.26 0.77 -0.25 2.78       0        TD     4.70
-    #> 3      B06       1.19 0.61  0.00 2.38       0        TD     5.68
-    #> 4      B07       2.47 1.05  0.41 4.53       0        TD     5.43
-    #> 5      H09      -0.83 3.06 -6.82 5.17       0        TD     6.96
-    #> 6      P08      -0.60 1.21 -2.97 1.77       0        TD     5.04
-    #> 7 RE Model       1.16 0.37  0.44 1.89       0        TD       NA
-    #>   Control Weight
-    #> 1    5.19  17.16
-    #> 2    3.44  22.85
-    #> 3    4.49  36.88
-    #> 4    2.96  12.30
-    #> 5    7.78   1.46
-    #> 6    5.64   9.35
-    #> 7      NA 100.00
+    #>       Site Difference   SE   LCL  UCL Order.q Diversity Enhanced Control
+    #> 1      B04       1.16 0.93 -0.66 2.98       0        TD     6.35    5.19
+    #> 2      B05       1.26 0.71 -0.13 2.65       0        TD     4.70    3.44
+    #> 3      B06       1.19 0.63 -0.05 2.43       0        TD     5.68    4.49
+    #> 4      B07       2.47 1.09  0.33 4.61       0        TD     5.43    2.96
+    #> 5      H09      -0.83 3.77 -8.22 6.57       0        TD     6.96    7.78
+    #> 6      P08      -0.60 1.18 -2.91 1.71       0        TD     5.04    5.64
+    #> 7 RE Model       1.16 0.37  0.43 1.88       0        TD       NA      NA
+    #>   Weight
+    #> 1  15.91
+    #> 2  27.31
+    #> 3  34.38
+    #> 4  11.52
+    #> 5   0.97
+    #> 6   9.91
+    #> 7 100.00
 
     #> [[1]]
     #> # A tibble: 1 × 6
     #>   Order.q Q_val df_val p_val I2_val tau2_val
     #>     <dbl> <dbl>  <dbl> <chr>  <dbl>    <dbl>
-    #> 1       0  4.11      5 0.533      0        0
+    #> 1       0  3.97      5 0.553      0        0
 
 ## Phylogenetic diversity
 
@@ -792,7 +843,7 @@ sites and perform meta analysis.
 The required argument for performing FD analysis is `FDdistM`. For
 example, the distance matrix for all species is stored in a csv file
 named “Bat\_distM”. Then we enter the argument `FDdistM = Bat_distM`.
-Three optional arguments are (1) `FDtype`: `FDtype = "AUC"`means FD is
+Three optional arguments are (1) `FDtype`: `FDtype = "AUC"` means FD is
 computed from the area under the curve of a tau-profile by integrating
 all plausible threshold values between zero and one;
 `FDtype = "tau-value"` means FD is computed under a specific threshold
@@ -938,11 +989,10 @@ functional diversity, respectively:
     data("Bat_distM")
     infooutput <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "TD", datatype = "incidence_raw")
     level1 <- infooutput |> filter(Assemblage == "Joint assemblage") |> pull(`SC(2T)`) |> quantile(0.25)
-
     output3 <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD", 
-                                order.q = 0, datatype = "incidence_raw", level = NULL, 
-                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
-                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
+                               order.q = 0, datatype = "incidence_raw", level = NULL, 
+                               nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
+                               FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
 
     ggiNEXTmeta(output3, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = round(level1, 3) * 100)
 

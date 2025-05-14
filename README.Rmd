@@ -23,6 +23,8 @@ library(metafor)
 <font color=#FF6600>
 </font>
 
+# An Introduction to iNEXT.meta via Examples
+
 `iNEXT.meta` (Meta-analysis of the difference between two treatments in interpolation and extrapolation for beta diversity across three dimensions)) is an R package that extends the concepts of \code{iNEXT.beta3D} (Chao et al., 2023) to meta analysis (fixed- or random-effects model). The measures are demonstrated using two datasets: spider data and bat data. The spider dataset contains species abundance data for 199 spider species across 11 sites (B04, B05, B06, B07, H09, L11, P08, S10, U01, U02, and U03), each assigned to one of two treatments: Control or Enhanced. The bat dataset consists of species-by-sampling-unit incidence data for 17 bat species collected from 6 sites (B04, B05, B06, B07, H09, and P08), also under the two treatments: Control and Enhanced.
 
 For each of the three diversity dimensions—taxonomic (TD), phylogenetic (PD), and functional (FD)—iNEXT.meta estimates the difference in standardized diversity between two treatments, based on a common sample coverage, across various diversity types including alpha, beta, and gamma diversity, as well as four dissimilarity measures. The package then applies fixed- or random-effects models to perform meta-analysis across studies or sites. It also includes visualization tools such as forest plots to effectively present the analysis results.
@@ -62,7 +64,7 @@ There are three main functions in this package:
 
 The funciton <code>DataInfobeta3Dmeta()</code> provides basic data information in each combination of site and treatment for (1) the gamma reference sample in the pooled assemblage, and (2) the alpha reference sample in the joint assemblage. The function <code>DataInfobeta3Dmeta()</code> with default arguments is shown below:
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 iNEXTbeta3Dmeta(data, diversity = "TD", datatype = "abundance", 
                 PDtree = NULL, PDreftime = NULL,
                 FDdistM = NULL, FDtype = "AUC", FDtau = NULL)
@@ -93,7 +95,7 @@ treatment. \cr
 </tr>
 <tr class="even">
 <td align="center"><code>diversity</code></td>
-<td align="left">Selection of diversity type: "TD" = <font color=#FF6781>Taxonomic diversity</font>, "PD" = <font color=#FF6781>Phylogenetic diversity</font>, and "FD" = <font color=#FF6781>Functional diversity</font>.</td>
+<td align="left">Selection of diversity type: "TD" = Taxonomic diversity, "PD" = Phylogenetic diversity, and "FD" = Functional diversity.</td>
 
 </tr>
 <tr class="odd">
@@ -128,14 +130,22 @@ treatment. \cr
 </tbody>
 </table>
 
-Running the <code>DataInfobeta3Dmeta()</code> function returns basic data information including sample size, observed species richness, and sample coverage. For abundance data, it provides both <code>SC(n)</code> and <code>SC(2n)</code>; for incidence data, it provides <code>SC(T)</code> and <code>SC(2T)</code>. The output also includes other relevant information across the three dimensions of diversity. We demonstrate the function using the <code>Bat_incidence_data</code>) dataset for each dimension.
+Running the <code>DataInfobeta3Dmeta()</code> function returns basic data information including sample size, observed species richness, and sample coverage. For abundance data, it provides both <code>SC(n)</code> and <code>SC(2n)</code>; for incidence data, it provides <code>SC(T)</code> and <code>SC(2T)</code>. The output also includes other relevant information across the three dimensions of diversity. We demonstrate the function using the <code>Bat_incidence_data</code> dataset for each dimension.
+
+```{r, eval=FALSE}
+## Data information for taxonomic diversity
+data("Bat_incidence_data")
+infooutput1 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "TD", datatype = "incidence_raw")
+
+infooutput1
+```
 
 ```{r, echo=FALSE}
 ## Data information for taxonomic diversity
 data("Bat_incidence_data")
 infooutput1 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "TD", datatype = "incidence_raw")
 
-infooutput1
+infooutput1[1:15, ]
 ```
 
 Output description:
@@ -158,7 +168,7 @@ Output description:
 
 - <code>Q1</code>-<code>Q5</code> = the first five species incidence frequency counts in the reference sample.
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 ## Data information for phylogenetic diversity
 data("Bat_incidence_data")
 data("Bat_tree")
@@ -166,6 +176,16 @@ infooutput2 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "PD", d
                                   PDtree = Bat_tree, PDreftime = NULL)
 
 infooutput2
+```
+
+```{r, echo=FALSE}
+## Data information for phylogenetic diversity
+data("Bat_incidence_data")
+data("Bat_tree")
+infooutput2 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "PD", datatype = "incidence_raw",
+                                  PDtree = Bat_tree, PDreftime = NULL)
+
+infooutput2[1:15, ]
 ```
 
 Information description:
@@ -180,7 +200,7 @@ Information description:
 
 - <code>Reftime</code> = reference time for phylogenetic diversity (the age of the root of phylogenetic tree).
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 ## Data information for functional diversity (under a specified threshold level, FDtype = "tau_value")
 data("Bat_incidence_data")
 data("Bat_distM")
@@ -188,6 +208,16 @@ infooutput3 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", d
                                   FDdistM = Bat_distM, FDtype = "tau_value", FDtau = NULL)
 
 infooutput3
+```
+
+```{r, echo=FALSE}
+## Data information for functional diversity (under a specified threshold level, FDtype = "tau_value")
+data("Bat_incidence_data")
+data("Bat_distM")
+infooutput3 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", datatype = "incidence_raw",
+                                  FDdistM = Bat_distM, FDtype = "tau_value", FDtau = NULL)
+
+infooutput3[1:15, ]
 ```
 
 Information description:
@@ -200,14 +230,24 @@ Information description:
 
 - <code>Tau</code> = the specified threshold level of distinctiveness. Default is dmean (the mean distance between any two individuals randomly selected from the pooled data over all datasets).
 
-```{r, echo=FALSE}
-## Data information for functional diversity (FDtype = 'AUC')
+```{r, eval=FALSE}
+## Data information for functional diversity (FDtype = "AUC")
 data("Bat_incidence_data")
 data("Bat_distM")
 infooutput4 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", datatype = "incidence_raw",
                                   FDdistM = Bat_distM, FDtype = "AUC")
 
 infooutput4
+```
+
+```{r, echo=FALSE}
+## Data information for functional diversity (FDtype = "AUC")
+data("Bat_incidence_data")
+data("Bat_distM")
+infooutput4 <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "FD", datatype = "incidence_raw",
+                                  FDdistM = Bat_distM, FDtype = "AUC")
+
+infooutput4[1:15, ]
 ```
 
 Information description:
@@ -255,12 +295,12 @@ treatment. \cr
 <tr>
 <tr class="even">
 <td align="center"><code>model</code></td>
-<td align="left">Selection of model type: "FE" = <font color=#FF6781>Fixed-effects model</font>, "RE" = <font color=#FF6781>Random-effects model</font>.</td>
+<td align="left">Selection of model type: "FE" = Fixed-effects model, "RE" = Random-effects model.</td>
 
 </tr>
 <tr class="odd">
 <td align="center"><code>diversity</code></td>
-<td align="left">Selection of diversity type: "TD" = <font color=#FF6781>Taxonomic diversity</font>, "PD" = <font color=#FF6781>Phylogenetic diversity</font>, and "FD" = <font color=#FF6781>Functional diversity</font>.</td>
+<td align="left">Selection of diversity type: "TD" = Taxonomic diversity, "PD" = Phylogenetic diversity, and "FD" = Functional diversity.</td>
 
 </tr>
 <tr class="even">
@@ -496,7 +536,7 @@ output2
 
 As with taxonomic and phylogenetic diversity, `iNEXT.meta` computes the difference of functional diversity between two treatments across all sites and perform meta analysis. 
 
-The required argument for performing FD analysis is `FDdistM`. For example, the distance matrix for all species is stored in a csv file named "Bat_distM". Then we enter the argument `FDdistM = Bat_distM`. Three optional arguments are (1) `FDtype`: `FDtype = "AUC"`means FD is computed from the area under the curve of a tau-profile by integrating all plausible threshold values between zero and one; `FDtype = "tau-value"` means FD is computed under a specific threshold value to be specified in the argument `FD_tau`. (2) `FD_tau`: a numerical value specifying the tau value (threshold level) that will be used to compute FD. If `FDtype = "tau-value"` and `FD_tau = NULL`, then the threshold level is set to be the mean distance between any two individuals randomly selected from the pooled data over all datasets (i.e., quadratic entropy). (3)  `FDcut_number` is a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value. Default is `FDcut_number = 30`. If more accurate integration is desired, then use a larger integer. 
+The required argument for performing FD analysis is `FDdistM`. For example, the distance matrix for all species is stored in a csv file named "Bat_distM". Then we enter the argument `FDdistM = Bat_distM`. Three optional arguments are (1) `FDtype`: `FDtype = "AUC"` means FD is computed from the area under the curve of a tau-profile by integrating all plausible threshold values between zero and one; `FDtype = "tau-value"` means FD is computed under a specific threshold value to be specified in the argument `FD_tau`. (2) `FD_tau`: a numerical value specifying the tau value (threshold level) that will be used to compute FD. If `FDtype = "tau-value"` and `FD_tau = NULL`, then the threshold level is set to be the mean distance between any two individuals randomly selected from the pooled data over all datasets (i.e., quadratic entropy). (3)  `FDcut_number` is a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value. Default is `FDcut_number = 30`. If more accurate integration is desired, then use a larger integer. 
 
 Run the following code to perform FD analysis. The output is similar to the taxonomic diversity and thus is omitted; see later graphical display of the output. 
 
@@ -608,7 +648,6 @@ data("Bat_incidence_data")
 data("Bat_distM")
 infooutput <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = "TD", datatype = "incidence_raw")
 level1 <- infooutput |> filter(Assemblage == "Joint assemblage") |> pull(`SC(2T)`) |> quantile(0.25)
-
 output3 <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "FD", 
                            order.q = 0, datatype = "incidence_raw", level = NULL, 
                            nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
