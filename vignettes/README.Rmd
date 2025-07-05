@@ -17,7 +17,6 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>",
 #options("width"=200)
 library(iNEXT.meta)
 library(tidyverse)
-library(metafor)
 ```
 
 <font color=#FF6600>
@@ -25,7 +24,7 @@ library(metafor)
 
 # An Introduction to iNEXT.meta via Examples
 
-`iNEXT.meta` (Meta-analysis of the difference between two treatments in interpolation and extrapolation for beta diversity across three dimensions)) is an R package that extends the concepts of \code{iNEXT.beta3D} (Chao et al., 2023) to meta analysis (fixed- or random-effects model). The measures are demonstrated using two datasets: spider data and bat data. The spider dataset contains species abundance data for 199 spider species across 11 sites (B04, B05, B06, B07, H09, L11, P08, S10, U01, U02, and U03), each assigned to one of two treatments: Control or Enhanced. The bat dataset consists of species-by-sampling-unit incidence data for 17 bat species collected from 6 sites (B04, B05, B06, B07, H09, and P08), also under the two treatments: Control and Enhanced.
+`iNEXT.meta` (Meta-analysis of the difference between two treatments in interpolation and extrapolation for beta diversity across three dimensions)) is an R package that extends the concepts of iNEXT.beta3D (Chao et al., 2023) to meta analysis (fixed- or random-effects model). The iNEXT.meta package provides two example datasets: spider data and bat data. The spider dataset contains species abundance data for 199 spider species across 11 sites (B04, B05, B06, B07, H09, L11, P08, S10, U01, U02, and U03), each assigned to one of two treatments: Control or Enhanced. The bat dataset consists of species-by-sampling-unit incidence data for 17 bat species collected from 6 sites (B04, B05, B06, B07, H09, and P08), also under the two treatments. In this demonstration, we use the bat dataset to illustrate the methods.
 
 For each of the three diversity dimensions—taxonomic (TD), phylogenetic (PD), and functional (FD)—iNEXT.meta estimates the difference in standardized diversity between two treatments, based on a common sample coverage, across various diversity types including alpha, beta, and gamma diversity, as well as four dissimilarity measures. The package then applies fixed- or random-effects models to perform meta-analysis across studies or sites. It also includes visualization tools such as forest plots to effectively present the analysis results.
 
@@ -36,11 +35,11 @@ For each of the three diversity dimensions—taxonomic (TD), phylogenetic (PD), 
 
 
 ## HOW TO RUN iNEXT.meta:
-The `iNEXT.meta` package can be downloaded from Anne Chao's Github [iNEXT.meta_github](https://github.com/AnneChao/iNEXT.meta) using the following commands. For a first-time installation, an additional visualization extension package (`forestplot` from CRAN) and (`iNEXT.beta3D` from Anne Chao's github) must be installed and loaded. 
+The `iNEXT.meta` package can be downloaded from Anne Chao's Github [iNEXT.meta_github](https://github.com/AnneChao/iNEXT.meta) using the following commands. For a first-time installation, an additional visualization extension package (`forestplot` from CRAN) and (`iNEXT.beta3D` from CRAN) must be installed and loaded. 
 
 ```{r eval=FALSE}
-# install_github('AnneChao/iNEXT.beta3D')
-# library(iNEXT.beta3D)
+# install INEXT.meta package from CRAN
+# install.packages("iNEXT.meta")
 
 ## install the latest version from github
 #install.packages('devtools')
@@ -88,7 +87,7 @@ The arguments of this function are briefly described below, and will be explaine
 <tr class="odd">
 <td align="center"><code>data</code></td>
 <td align="left">
-(a) For <code>datatype = "abundance"</code>, data can be input as a data.frame (species by assemblages). The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and
+(a) For <code>datatype = "abundance"</code>, data can be input as a data.frame (assemblages by species). The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and
 treatment. \cr
 (b) For <code>datatype = "incidence_raw"</code>, data can be input as a data.frame. The data frame has study/site, treatment, patch as the first three columns, followed by columns for species names.</td>
 
@@ -288,7 +287,7 @@ The arguments of this function are briefly described below, and will be explaine
 <tr class="odd">
 <td align="center"><code>data</code></td>
 <td align="left">
-(a) For <code>datatype = "abundance"</code>, data can be input as a data.frame (species by assemblages). The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and
+(a) For <code>datatype = "abundance"</code>, data can be input as a data.frame (assemblages by species). The data frame has study/site and treatment as the first two columns, followed by columns for species names. Here an assemblage refers to a combination of study/site and
 treatment. \cr
 (b) For <code>datatype = "incidence_raw"</code>, data can be input as a data.frame. The data frame has study/site, treatment, patch as the first three columns, followed by columns for species names.</td>
 
@@ -393,7 +392,7 @@ To perform meta-analysis across studies or sites, the input dataset must follow 
   - **First three columns**:  
     - `Site`: study or site name  
     - `Treatment`: treatment condition  
-    - `Patch`: sampling unit ID
+    - `Patch`: each patch within the same site and treatment combination should have the same sampling unit ID
   - **Remaining columns**:  
     - Species names as column headers  
     - Entries should be **0 or 1**, indicating absence or presence in each patch
@@ -491,6 +490,15 @@ This structured output enables both per-site interpretation and global inference
 ## Taxonomic diversity
 
 First, we run the `iNEXTbeta3Dmeta()` function with `Bat_incidence_data` to compute the difference of taxonomic diversity between two treatments across all sites and perform meta analysis by running the following code: 
+
+```{r, eval=FALSE}
+# Taxonomic diversity
+
+data("Bat_incidence_data")
+output1 <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD", 
+                            order.q = 0, datatype = "incidence_raw", level = NULL, 
+                            nboot = 100, treatment_order = c("Enhanced", "Control"), conf = 0.95)
+```
 
 ```{r, echo=FALSE}
 # Taxonomic diversity
