@@ -13,9 +13,12 @@
 #' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_value"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
 #'
 #'
-#'
-#' @import iNEXT.beta3D
-#' @import stringr
+#' @importFrom dplyr group_by summarise filter select across pick everything ungroup reframe
+#' @importFrom tidyr unnest
+#' @importFrom iNEXT.beta3D DataInfobeta3D
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_to_title
+#' @importFrom utils globalVariables
 #'
 #'
 #' @return A data.frame including basic data information. \cr
@@ -25,7 +28,7 @@
 #' for twice the reference sample size (\code{SC(2n)}). Other additional information is given below. \cr
 #'
 #' \itemize{
-#' (1) TD: the first five species abundance frequency counts in the reference sample (\code{f1–f5}).
+#' (1) TD: the first five species abundance frequency counts in the reference sample (\code{f1-f5}).
 #'
 #' (2) Mean-PD: the the observed total branch length in the phylogenetic tree (\code{PD.obs}), the number of
 #' singletons (\code{f1*}) and doubletons (\code{f2*}) in the node/branch abundance set, as well as the total branch
@@ -44,27 +47,33 @@
 #' pooled/joint assemblage (\code{Assemblage}), number of sampling units (\code{T}), total number of incidences (\code{U}), observed
 #' species richness (\code{S.obs}), sample coverage estimates of the reference sample (\code{SC(T)}), sample coverage
 #' estimate for twice the reference sample size (\code{SC(2T)}), as well as the first five species incidence
-#' frequency counts (\code{Q1–Q5}) in the reference sample. For mean-PD and FD, output is similar to that
+#' frequency counts (\code{Q1-Q5}) in the reference sample. For mean-PD and FD, output is similar to that
 #' for abundance data.
 #'
 #'
 #' @examples
 #' ## (Data Information) Taxonomic diversity for abundance data
 #' data("Spider_abundance_data")
-#' info_TD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'TD', datatype = 'abundance')
+#' info_TD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+#'                                          diversity = 'TD',
+#'                                          datatype = 'abundance')
 #' info_TD_abu
 #'
 #'
 #' ## (Data Information) Taxonomic diversity for incidence data
 #' data("Bat_incidence_data")
-#' info_TD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'TD', datatype = 'incidence_raw')
+#' info_TD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+#'                                          diversity = 'TD',
+#'                                          datatype = 'incidence_raw')
 #' info_TD_inc
 #'
 #'
 #' ## (Data Information) Mean phylogenetic diversity for abundance data
 #' data("Spider_abundance_data")
 #' data("Spider_tree")
-#' info_PD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'PD', datatype = 'abundance',
+#' info_PD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+#'                                   diversity = 'PD',
+#'                                   datatype = 'abundance',
 #'                                   PDtree = Spider_tree, PDreftime = NULL)
 #' info_PD_abu
 #'
@@ -72,42 +81,57 @@
 #' ## (Data Information) Mean phylogenetic diversity for incidence data
 #' data("Bat_incidence_data")
 #' data("Bat_tree")
-#' info_PD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'PD', datatype = 'incidence_raw',
-#'                                   PDtree = Bat_tree, PDreftime = NULL)
+#' info_PD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+#'                                   diversity = 'PD',
+#'                                   datatype = 'incidence_raw',
+#'                                   PDtree = Bat_tree,
+#'                                   PDreftime = NULL)
 #' info_PD_inc
 #'
 #'
 #' ## (Data Information) Functional diversity for abundance data under a specified threshold level
 #' data("Spider_abundance_data")
 #' data("Spider_distM")
-#' info_FDtau_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
-#'                                      FDdistM = Spider_distM, FDtype = "tau_value", FDtau = NULL)
+#' info_FDtau_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+#'                                      diversity = 'FD',
+#'                                      datatype = 'abundance',
+#'                                      FDdistM = Spider_distM,
+#'                                      FDtype = "tau_value", FDtau = NULL)
 #' info_FDtau_abu
 #'
 #'
-#' ## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are
-#' considered
+#' ## (Data Information) Functional diversity for abundance data when all
+#' ## threshold levels from 0 to 1 are considered
 #' data("Spider_abundance_data")
 #' data("Spider_distM")
-#' info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
-#'                                      FDdistM = Spider_distM, FDtype = "AUC", FDtau = NULL)
+#' info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+#'                                      diversity = 'FD',
+#'                                      datatype = 'abundance',
+#'                                      FDdistM = Spider_distM,
+#'                                      FDtype = "AUC", FDtau = NULL)
 #' info_FDAUC_abu
 #'
 #'
 #' ## (Data Information) Functional diversity for incidence data under a specified threshold level
 #' data("Bat_incidence_data")
 #' data("Bat_distM")
-#' info_FDtau_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',
-#'                                      FDdistM = Bat_distM, FDtype = "tau_value", FDtau = NULL)
+#' info_FDtau_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+#'                                      diversity = 'FD',
+#'                                      datatype = 'incidence_raw',
+#'                                      FDdistM = Bat_distM,
+#'                                      FDtype = "tau_value", FDtau = NULL)
 #' info_FDtau_inc
 #'
 #'
-#' ## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are
-#' considered
+#' ## (Data Information) Functional diversity for incidence data when all
+#' ## threshold levels from 0 to 1 are considered
 #' data("Bat_incidence_data")
 #' data("Bat_distM")
-#' info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',
-#'                                      FDdistM = Bat_distM, FDtype = "AUC", FDtau = NULL)
+#' info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+#'                                      diversity = 'FD',
+#'                                      datatype = 'incidence_raw',
+#'                                      FDdistM = Bat_distM,
+#'                                      FDtype = "AUC", FDtau = NULL)
 #' info_FDAUC_inc
 #'
 #' @export
@@ -131,6 +155,7 @@ DataInfobeta3Dmeta <- function(data, diversity = "TD", datatype = "abundance",
     data |>
       group_by(across(1:3)) |>
       summarise(mat = list(t(pick(everything()))), .groups = "drop") %>%
+      filter(!sapply(mat, function(m) all(as.matrix(m) == 0))) |>
       group_by(across(1:2)) |>
       summarise(mat = list(mat), .groups = "keep") %>%
       reframe(mat %>%
@@ -159,20 +184,25 @@ DataInfobeta3Dmeta <- function(data, diversity = "TD", datatype = "abundance",
 #' @param conf A positive number < 1 specifying the level of confidence interval. Default is 0.95.
 #' @param PDtree (required only when \code{diversity = "PD"}), a phylogenetic tree in Newick format for all observed species in the pooled data.
 #' @param PDreftime (required only when \code{diversity = "PD"}), a numerical value specifying reference times for PD. Default is NULL (i.e., the age of the root of PDtree).
+#' @param PDtype (argument only for \code{diversity = "PD"}), select PD type: \code{PDtype = "PD"} (effective total branch length) or \code{PDtype = "meanPD"} (effective number of equally divergent lineages). Default is \code{PDtype = "meanPD"}, where \code{meanPD = PD/tree depth}.
 #' @param FDdistM (required only when \code{diversity = "FD"}), a species pairwise distance matrix for all species in the pooled data.
 #' @param FDtype (required only when \code{diversity = "FD"}), select FD type: \code{FDtype = "tau_value"} for FD under a specified threshold value, or \code{FDtype = "AUC"} (area under the curve of tau-profile) for an overall FD which integrates all threshold values between zero and one. Default is \code{FDtype = "AUC"}.
 #' @param FDtau (required only when \code{diversity = "FD"} and \code{FDtype = "tau_value"}), a numerical value between 0 and 1 specifying the tau value (threshold level) that will be used to compute FD. If \code{FDtau = "NULL"} (default), then threshold is set to be the mean distance between any two individuals randomly selected from the pooled data (i.e., quadratic entropy).
 #' @param FDcut_number (required only when \code{diversity = "FD"} and \code{FDtype = "AUC"}) a numeric number to cut [0, 1] interval into equal-spaced sub-intervals to obtain the AUC value by integrating the tau-profile. Equivalently, the number of tau values that will be considered to compute the integrated AUC value. Default is 30. A larger value can be set to obtain more accurate AUC value.
 #'
 #'
-#'
-#' @import iNEXT.beta3D
-#' @import stringr
-#'
+#' @import iNEXT.3D
+#' @importFrom dplyr group_by group_split summarise filter select mutate ungroup rename rename_with bind_rows across everything
+#' @importFrom purrr map map2_dfr map_dfr map_df imap
+#' @importFrom stringr str_to_title
+#' @importFrom tibble tibble
+#' @importFrom stats qnorm
+#' @importFrom metafor rma
+#' @importFrom iNEXT.beta3D iNEXTbeta3D
 #'
 #' @return The function returns a list containing seven components: Gamma, Alpha, Beta, 1-C, 1-U, 1-V, and 1-S. Each component consists of two parts. The first part is a dataframe that includes a column named Site (or the user-defined name in the input data), representing the study or site identity. It also contains a column Difference, which indicates the difference in diversity between the two treatments,
 #' along with SE for the standard error of the difference, LCL and UCL for the lower and upper confidence limits, and Order.q for the diversity order q. The type of diversity measure is recorded in the Diversity column, which can be TD, PD, or FD. Additionally, the dataframe includes two columns showing the estimated diversity values of the two treatments for each site,
-#' and a Weight column representing the weight assigned to each site for the fixed or random effect model. The second part of each component is a summary table reporting meta-analytic statistics under the fixed or random effect model, including Cochran’s Q statistic (Q_val), the degrees of freedom (df_val), the associated p-value (p_val) for the heterogeneity test, the heterogeneity percentage (I2_val), and the estimated between-site variance (tau2_val).
+#' and a Weight column representing the weight assigned to each site for the fixed or random effect model. The second part of each component is a summary table reporting meta-analytic statistics under the fixed or random effect model, including Cochran's Q statistic (Q_val), the degrees of freedom (df_val), the associated p-value (p_val) for the heterogeneity test, the heterogeneity percentage (I2_val), and the estimated between-site variance (tau2_val).
 #'
 #' @examples
 #'
@@ -451,14 +481,19 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' \code{ggiNEXTmeta} is a function that provides forest plot for the difference of standardized 3D (taxonomic, phylogenetic and functional) beta diversity between two treatments.
 #'
 #' @param output The output of the iNEXTbeta3Dmeta function.
-#' @param order.q A previously appeared 'Order.q' value in 'output'.
+#' @param q A previously appeared 'Order.q' value in 'output'.
 #' @param num_round A numerical value that the values show on the plot are rounded to the specified value of decimal places.
 #' @param range Lower and upper limits for clipping confidence intervals to arrows.
 #' @param type Specify diversity type (\code{'Gamma', 'Alpha', 'Beta'}), or dissimilarity type (\code{'1-C', '1-U', '1-V', '1-S'}).
 #' @param level An optional sample coverage value (between 0 and 100 percent) to be annotated on the forest plot, indicating the fixed sample coverage used; if \code{level = NULL}, the annotation will be omitted.
 #'
-#' @import forestplot
-#' @import grid
+#'
+#' @importFrom dplyr filter
+#' @importFrom forestplot forestplot fp_set_style fp_add_header fp_append_row fp_decorate_graph fp_set_zebra_style fp_add_lines fpTxtGp
+#' @importFrom tibble tibble
+#' @importFrom magrittr %>%
+#' @importFrom grid grid.text gpar
+#' @importFrom gridExtra grid.arrange
 #'
 #'
 #' @return A forest plot that visualizing the output of iNEXTbeta3Dmeta. In the plot, it shows the difference of diversity between two treatments for each study/site and meta analysis (fixed- or random-effects model).
@@ -472,7 +507,8 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
 #'                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
-#' ggiNEXTmeta(output1_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output1_abu, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' ## Phylogenetic diversity for abundance data
@@ -484,7 +520,8 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
-#' ggiNEXTmeta(output2_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output2_abu, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' ## Functional diversity for abundance data
@@ -496,7 +533,8 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
-#' ggiNEXTmeta(output3_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output3_abu, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' ## Taxonomic diversity for incidence data
@@ -506,7 +544,8 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #' output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
 #'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
-#' ggiNEXTmeta(output1_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output1_inc, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' ## Phylogenetic diversity for incidence data
@@ -518,7 +557,8 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
-#' ggiNEXTmeta(output2_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output2_inc, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' ## Functional diversity for incidence data
@@ -530,27 +570,28 @@ iNEXTbeta3Dmeta <- function(data, model = "FE", diversity = "TD", order.q = 0, d
 #'                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
 #'                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
 #'                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
-#' ggiNEXTmeta(output3_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+#' ggiNEXTmeta(output3_inc, q = 0, num_round = 3,
+#'             range = c(-20, 15), type = "Gamma", level = NULL)
 #'
 #'
 #' @export
 
 
-ggiNEXTmeta <- function(output, order.q, num_round = 3, range, type = NULL, level = NULL){
+ggiNEXTmeta <- function(output, q, num_round = 3, range, type = NULL, level = NULL){
 
   if (!is.null(type)) output <- output[paste("Summary", type, sep = "_")]
 
   meta_output <- output[[1]][[1]]
   meta_note <- output[[1]][[2]]
 
-  meta_output <- meta_output |> filter(Order.q == order.q)
-  meta_note <- meta_note |> filter(Order.q == order.q)
+  meta_output <- meta_output |> filter(Order.q == q)
+  meta_note <- meta_note |> filter(Order.q == q)
   meta_note_q <- paste0(
     meta_output[nrow(meta_output), 1], " (Q = ", meta_note$Q_val,
     ", df = ", meta_note$df_val,
     ", p = ", meta_note$p_val,
-    "; I² = ", meta_note$I2_val,
-    ", τ² = ", meta_note$tau2_val, ")"
+    "; I2 = ", meta_note$I2_val,
+    ", tau2 = ", meta_note$tau2_val, ")"
   )
 
   name <- colnames(meta_output)[1]
@@ -614,4 +655,3 @@ ggiNEXTmeta <- function(output, order.q, num_round = 3, range, type = NULL, leve
   grid.text(meta_note_q, x = 0.5, y = 0, just = "bottom", check.overlap = TRUE)
 
 }
-

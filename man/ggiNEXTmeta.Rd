@@ -4,12 +4,12 @@
 \alias{ggiNEXTmeta}
 \title{Forest plot of the standardized 3D diversity difference between two treatments under fixed- or random-effects model}
 \usage{
-ggiNEXTmeta(output, order.q, num_round = 3, range, type = NULL, level = NULL)
+ggiNEXTmeta(output, q, num_round = 3, range, type = NULL, level = NULL)
 }
 \arguments{
 \item{output}{The output of the iNEXTbeta3Dmeta function.}
 
-\item{order.q}{A previously appeared 'Order.q' value in 'output'.}
+\item{q}{A previously appeared 'Order.q' value in 'output'.}
 
 \item{num_round}{A numerical value that the values show on the plot are rounded to the specified value of decimal places.}
 
@@ -33,7 +33,8 @@ data("Spider_abundance_data")
 output1_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diversity = "TD",
                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
-ggiNEXTmeta(output1_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output1_abu, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 ## Phylogenetic diversity for abundance data
@@ -45,7 +46,8 @@ output2_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diver
                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Spider_tree, PDreftime = NULL, PDtype = "meanPD")
-ggiNEXTmeta(output2_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output2_abu, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 ## Functional diversity for abundance data
@@ -57,7 +59,8 @@ output3_abu <- iNEXTbeta3Dmeta(data = Spider_abundance_data, model = "RE", diver
                                order.q = c(0, 1, 2), datatype = "abundance", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Spider_distM, FDtype = "AUC", FDcut_number = 30)
-ggiNEXTmeta(output3_abu, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output3_abu, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 ## Taxonomic diversity for incidence data
@@ -67,7 +70,8 @@ data("Bat_incidence_data")
 output1_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversity = "TD",
                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95)
-ggiNEXTmeta(output1_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output1_inc, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 ## Phylogenetic diversity for incidence data
@@ -79,7 +83,8 @@ output2_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversit
                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                PDtree = Bat_tree, PDreftime = NULL, PDtype = "meanPD")
-ggiNEXTmeta(output2_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output2_inc, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 ## Functional diversity for incidence data
@@ -91,7 +96,8 @@ output3_inc <- iNEXTbeta3Dmeta(data = Bat_incidence_data, model = "RE", diversit
                                order.q = c(0, 1, 2), datatype = "incidence_raw", level = NULL,
                                nboot = 10, treatment_order = c("Enhanced", "Control"), conf = 0.95,
                                FDdistM = Bat_distM, FDtype = "AUC", FDcut_number = 30)
-ggiNEXTmeta(output3_inc, order.q = 0, num_round = 3, range = c(-20, 15), type = "Gamma", level = NULL)
+ggiNEXTmeta(output3_inc, q = 0, num_round = 3,
+            range = c(-20, 15), type = "Gamma", level = NULL)
 
 
 }

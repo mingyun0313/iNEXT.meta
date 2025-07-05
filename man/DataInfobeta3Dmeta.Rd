@@ -41,7 +41,7 @@ richness (\code{S.obs}), sample coverage estimates of the reference sample (\cod
 for twice the reference sample size (\code{SC(2n)}). Other additional information is given below. \cr
 
 \itemize{
-(1) TD: the first five species abundance frequency counts in the reference sample (\code{f1–f5}).
+(1) TD: the first five species abundance frequency counts in the reference sample (\code{f1-f5}).
 
 (2) Mean-PD: the the observed total branch length in the phylogenetic tree (\code{PD.obs}), the number of
 singletons (\code{f1*}) and doubletons (\code{f2*}) in the node/branch abundance set, as well as the total branch
@@ -60,7 +60,7 @@ For incidence data, the basic information for TD includes study/site name (\code
 pooled/joint assemblage (\code{Assemblage}), number of sampling units (\code{T}), total number of incidences (\code{U}), observed
 species richness (\code{S.obs}), sample coverage estimates of the reference sample (\code{SC(T)}), sample coverage
 estimate for twice the reference sample size (\code{SC(2T)}), as well as the first five species incidence
-frequency counts (\code{Q1–Q5}) in the reference sample. For mean-PD and FD, output is similar to that
+frequency counts (\code{Q1-Q5}) in the reference sample. For mean-PD and FD, output is similar to that
 for abundance data.
 }
 \description{
@@ -69,20 +69,26 @@ for abundance data.
 \examples{
 ## (Data Information) Taxonomic diversity for abundance data
 data("Spider_abundance_data")
-info_TD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'TD', datatype = 'abundance')
+info_TD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+                                         diversity = 'TD',
+                                         datatype = 'abundance')
 info_TD_abu
 
 
 ## (Data Information) Taxonomic diversity for incidence data
 data("Bat_incidence_data")
-info_TD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'TD', datatype = 'incidence_raw')
+info_TD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+                                         diversity = 'TD',
+                                         datatype = 'incidence_raw')
 info_TD_inc
 
 
 ## (Data Information) Mean phylogenetic diversity for abundance data
 data("Spider_abundance_data")
 data("Spider_tree")
-info_PD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'PD', datatype = 'abundance',
+info_PD_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+                                  diversity = 'PD',
+                                  datatype = 'abundance',
                                   PDtree = Spider_tree, PDreftime = NULL)
 info_PD_abu
 
@@ -90,42 +96,57 @@ info_PD_abu
 ## (Data Information) Mean phylogenetic diversity for incidence data
 data("Bat_incidence_data")
 data("Bat_tree")
-info_PD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'PD', datatype = 'incidence_raw',
-                                  PDtree = Bat_tree, PDreftime = NULL)
+info_PD_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+                                  diversity = 'PD',
+                                  datatype = 'incidence_raw',
+                                  PDtree = Bat_tree,
+                                  PDreftime = NULL)
 info_PD_inc
 
 
 ## (Data Information) Functional diversity for abundance data under a specified threshold level
 data("Spider_abundance_data")
 data("Spider_distM")
-info_FDtau_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
-                                     FDdistM = Spider_distM, FDtype = "tau_value", FDtau = NULL)
+info_FDtau_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+                                     diversity = 'FD',
+                                     datatype = 'abundance',
+                                     FDdistM = Spider_distM,
+                                     FDtype = "tau_value", FDtau = NULL)
 info_FDtau_abu
 
 
-## (Data Information) Functional diversity for abundance data when all threshold levels from 0 to 1 are
-considered
+## (Data Information) Functional diversity for abundance data when all
+## threshold levels from 0 to 1 are considered
 data("Spider_abundance_data")
 data("Spider_distM")
-info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data, diversity = 'FD', datatype = 'abundance',
-                                     FDdistM = Spider_distM, FDtype = "AUC", FDtau = NULL)
+info_FDAUC_abu <- DataInfobeta3Dmeta(data = Spider_abundance_data,
+                                     diversity = 'FD',
+                                     datatype = 'abundance',
+                                     FDdistM = Spider_distM,
+                                     FDtype = "AUC", FDtau = NULL)
 info_FDAUC_abu
 
 
 ## (Data Information) Functional diversity for incidence data under a specified threshold level
 data("Bat_incidence_data")
 data("Bat_distM")
-info_FDtau_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',
-                                     FDdistM = Bat_distM, FDtype = "tau_value", FDtau = NULL)
+info_FDtau_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+                                     diversity = 'FD',
+                                     datatype = 'incidence_raw',
+                                     FDdistM = Bat_distM,
+                                     FDtype = "tau_value", FDtau = NULL)
 info_FDtau_inc
 
 
-## (Data Information) Functional diversity for incidence data when all threshold levels from 0 to 1 are
-considered
+## (Data Information) Functional diversity for incidence data when all
+## threshold levels from 0 to 1 are considered
 data("Bat_incidence_data")
 data("Bat_distM")
-info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data, diversity = 'FD', datatype = 'incidence_raw',
-                                     FDdistM = Bat_distM, FDtype = "AUC", FDtau = NULL)
+info_FDAUC_inc <- DataInfobeta3Dmeta(data = Bat_incidence_data,
+                                     diversity = 'FD',
+                                     datatype = 'incidence_raw',
+                                     FDdistM = Bat_distM,
+                                     FDtype = "AUC", FDtau = NULL)
 info_FDAUC_inc
 
 }
